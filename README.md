@@ -1,5 +1,5 @@
 # liuzihua_PKU_intern
- internship in PKU in machine reception lab
+ internship in PKU in machine Preception lab
 
 ## DAY One : Try some fancy
 ##### (1) VAE
