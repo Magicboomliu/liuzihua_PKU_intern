@@ -19,11 +19,11 @@ scale = MinMaxScaler().fit(iris_data) # 训练规则
 iris_dataScale = scale.transform(iris_data) # 应用规则
 
 # 建立一个聚类为4的点
-kmeans = KMeans(n_clusters=4,random_state=1234).fit(iris_dataScale) # 构建并训练模型
-print('构建的K-Means模型为：\n',kmeans)
-result = kmeans.predict([[1.5,1.5,1.5,1.5]])
-print('花瓣花萼长度宽度全为1.5的鸢尾花预测类别为：',result[0])
-print(kmeans.score(iris_data,iris_target))
+kmeans = KMeans(n_clusters=8,random_state=1234).fit(iris_dataScale) # 构建并训练模型
+# print('构建的K-Means模型为：\n',kmeans)
+# result = kmeans.predict([[1.5,1.5,1.5,1.5]])
+# print('花瓣花萼长度宽度全为1.5的鸢尾花预测类别为：',result[0])
+# print(kmeans.score(iris_data,iris_target))
 
 
 '''  聚类结果可视化  '''
@@ -34,7 +34,11 @@ df1 = df[df['labels']==0]
 print(df1)
 df2 = df[df['labels']==1]
 df3 = df[df['labels']==2]
-df4=df[df['labels']==3]
+df4 =df[df['labels']==3]
+df5 = df[df['labels']==4]
+df6 = df[df['labels']==5]
+df7 = df[df['labels']==6]
+df8 =df[df['labels']==7]
 # fig = plt.figure(figsize=(9,6))    # 绘制图形  设定空白画布，并制定大小
-plt.plot(df1[0],df1[1],'bo',df2[0],df2[1],'r*',df3[0],df3[1],'gD',df4[0],df4[1],'yo')
+plt.plot(df1[0],df1[1],'bo',df2[0],df2[1],'r*',df3[0],df3[1],'gD',df4[0],df4[1],'yo',df5[0],df5[1],'ro',df6[0],df6[1],'b*',df7[0],df7[1],'gD',df8[0],df8[1],'go')
 plt.show()                          # 显示图片

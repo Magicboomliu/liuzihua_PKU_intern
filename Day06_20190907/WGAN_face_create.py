@@ -62,7 +62,6 @@ def discriminator(image, reuse=None, is_training=is_training):
         #最后输出一个scaler（Batch_Size,)
         h4 = tf.layers.dense(h4, units=1)
         return h4
-
 # 使用了batch normalize
 def generator(z, is_training=is_training):
     momentum = 0.9
@@ -87,6 +86,7 @@ def generator(z, is_training=is_training):
         # 此时的h4 是 （64,64,3）
         return h4
 
+
 '''
 定义一波损失函数
 '''
@@ -97,12 +97,15 @@ d_real = discriminator(X)
 #判别器FW出的generator产生图片的fage
 d_fake = discriminator(g, reuse=True)
 
-#定义一下损失,计算这个batch的总分（取—）
+#定义一下损失,计算这个batch的总分（取—）,输出就是一个标量
 loss_d_real = -tf.reduce_mean(d_real)  #越小越好
 loss_d_fake = tf.reduce_mean(d_fake)  #越大越好
 loss_g = -tf.reduce_mean(d_fake)  #越小越好
 loss_d = loss_d_real + loss_d_fake  # 最大化这一项
 
+''''
+1-Lapschitzl惩罚项gradient_penalty
+'''
 #添加一个 1-Lapschitz1 惩罚项 gradient_penalty
 #取值在real data 与 generate data之间进行采样
 alpha = tf.random_uniform(shape=[batch_size, 1, 1, 1], minval=0., maxval=1.)
@@ -110,10 +113,13 @@ alpha = tf.random_uniform(shape=[batch_size, 1, 1, 1], minval=0., maxval=1.)
 interpolates = alpha * X + (1 - alpha) * g
 #计算梯度
 grad = tf.gradients(discriminator(interpolates, reuse=True), [interpolates])[0]
+grad_shape = tf.shape(grad)
 #这里使用时L2距离
 slop = tf.sqrt(tf.reduce_sum(tf.square(grad), axis=[1]))
+slop_shape=tf.shape(slop)
 #得到gp的值
 gp = tf.reduce_mean((slop - 1.) ** 2)
+sshape=tf.shape(gp)
 #在discriminator的损失中加入gp，使其不会被训练的太好
 # this is the total loss
 loss_d += LAMBDA * gp
@@ -183,16 +189,15 @@ def get_random_batch(nums):
     batch = (batch - 0.5) * 2
     return batch
 
-
 #创建会话，训练数据
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 # 随即将采样成generator需要输入的数据
+
 z_samples = np.random.uniform(-1.0, 1.0, [batch_size, z_dim]).astype(np.float32)
 samples = []
 #创建一个loss的字典，存放generator loss 与discriminator loss
 loss = {'d': [], 'g': []}
-
 for i in tqdm(range(60000)):
     #训练3次gen之后，训练一次dis
     for j in range(DIS_ITERS):
@@ -213,11 +218,9 @@ for i in tqdm(range(60000)):
         gen_imgs = (gen_imgs + 1) / 2
         imgs = [img[:, :, :] for img in gen_imgs]
         gen_imgs = montage(imgs)
-        plt.axis('off')
-        plt.imshow(gen_imgs)
         imsave(os.path.join(OUTPUT_DIR, 'sample_%d.jpg' % i), gen_imgs)
-        plt.show()
         samples.append(gen_imgs)
+
 
 #画出loss
 plt.plot(loss['d'], label='Discriminator')

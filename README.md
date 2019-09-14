@@ -22,4 +22,10 @@
 ## DAY Five : make it clear for LSTM & Seq2Seq and attention-based model in SMT and apply it on Tensorflow .
 #### (1) Neural Network Machine Translation(a Seq2Seq work)
 #### (2) Neural Network Machine Translation(a Seq2Seq work using attention based model)
-## DAY Six : review the concept of WGAN, CGAN， use instances to code the WGAN and the CGAN，also lean something about ACGAN， write the intern daily of first week.
+## DAY Six : Review the concept of WGAN, CGAN， use instances to code the WGAN and the CGAN， write the intern daily of first week.
+##### (1) WGAN face creation
+##### (2) CGAN Mnist
+## DAY Seven : Focus on ACGAN,pixel to pixel ,and CycleGAN
+##### (1) ACGAN
+##### (2) CycleGAN
+##### (3) Pixel to Pixel
